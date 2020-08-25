@@ -1,73 +1,50 @@
 <?php
 
-            //Distribuir un monto, en billetes y monedas del Sol peruano.
+$montosValidos = array(200, 100, 50, 20, 10, 5, 2, 1);//billetes y monedas, sol peruano.
+$centimos = array(50, 20, 10);//monedas de céntimos, sol peruano.
 
-            $numeroreal = 13243.8;//aqui cambiar el valor- un decimal.
-            $numero = $numeroreal;
-            $parteDecimal = number_format((float)($numeroreal - floor($numeroreal)), 1, '.', '');//trabajando con decimales
-            
-            echo "Su vuelto es S./$numero repartidos en:";
-            echo "<br>";
-            echo "<br>";
+$numeroreal = 476.678; //cantidad monetaria a distribuir.<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-------
+if ($numeroreal <= 0) {
+    echo 'la cantidad debe ser mayor a 0';
+    return;
+}
 
-            function Calcular($valorActual, $num)
-            {
-                $tipo = "Billetes";
-                if($valorActual < 10)
-                {
-                    $tipo = "Monedas";
-                }
-                echo (floor($num/$valorActual)) . " $tipo de S./$valorActual";
-                echo "<br>";
-                return $num % $valorActual;
-            }
+$numeroreal = round($numeroreal, 1);
+$numero = (int)$numeroreal;
+$centimoUser = round(($numeroreal - floor($numeroreal)) * 100);
 
-            if($numero>=200){
-                $numero = Calcular(200, $numero);
-            }
-            if($numero>=100){                
-                $numero = Calcular(100, $numero);
-            }
-            if($numero>=50){                
-                $numero = Calcular(50, $numero);
-            }
-            if($numero>=20){                
-                $numero = Calcular(20, $numero);
-            }
-            if($numero>=10){                
-                $numero = Calcular(10, $numero);                
-            }
-            echo '--------------------------'; echo '<br>';
-            if($numero>=5){                
-                $numero = Calcular(5, $numero);
-            }
-            if($numero>=2){                
-                $numero = Calcular(2, $numero);
-            }
-            if($numero>=1){                
-                $numero = Calcular(1, $numero);
-            }
+echo "Su vuelto es S./" . number_format((float)$numeroreal, 2, '.', ' ') . " repartidos en: <br><br>";
 
-            //decimales-------------------------------------------------------------------
+# $valorActual es el formato de billete o moneda del Sol peruano, $num es el el monto a distribuir.
+function Calcular($valorActual, $num){
+    $tipo = "billetes";
+    if ($valorActual < 10) {
+        $tipo = "monedas";
+    }
+    echo (floor($num / $valorActual)) . " $tipo de S./$valorActual <br>";
+    return $num % $valorActual;
+}
 
-            echo '--------------------------'; echo '<br>';
-            
-            if($parteDecimal>=0.5){                
-                echo "1 Moneda de S/0.5"; echo '<br>';
-                $parteDecimal = number_format((float)($parteDecimal - 0.5), 1, '.', '');
-            }
-            
-            if($parteDecimal==0.4){                
-                echo "2 Monedas de S/0.2"; echo '<br>';
-                $parteDecimal = 0;
-            }
-            
-            if($parteDecimal >= 0.2){
-                echo "1 Moneda de S/0.2"; echo '<br>';
-                $parteDecimal = number_format((float)($parteDecimal - 0.2), 1, '.', '');
-            }
+function CalcularCentimo($formatoCentimo, $centimo){
+    $tipo = "moneda";
+    if (floor($formatoCentimo / $centimo) > 1) {
+        $tipo = "monedas";
+    }
+    echo floor($formatoCentimo / $centimo) . " $tipo de $centimo céntimos <br>";
+    return $formatoCentimo % $centimo;
+}
 
-            if($parteDecimal>=0.1){                
-                echo "1 Moneda de S/0.1";
-            }
+for ($i = 0; $i < count($montosValidos); $i++) {
+    if ($numero >= $montosValidos[$i]) {
+        $numero = Calcular($montosValidos[$i], $numero);
+    }
+}
+
+for ($i = 0; $i < count($centimos); $i++){
+
+    if ($centimoUser >= $centimos[$i])
+    {
+        $centimoUser = CalcularCentimo($centimoUser, $centimos[$i]);
+    }
+}
 ?>
